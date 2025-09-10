@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Velisse — Timeless Fashion & Beauty</title>
+  <meta name="description" content="Velisse — a curated dropshipping fashion & beauty store" />
+  <!-- Favicon (optional: upload your own to the repo and replace this link) -->
+  <link rel="icon" href="favicon.ico" />
+  <style>
+    :root{--accent:#0b3d91;--muted:#666;--card:#fff;--bg:#f6f6f6}
+    *{box-sizing:border-box}
+    body{font-family:Inter,Arial,sans-serif;margin:0;background:var(--bg);color:#111}
+    header{background:#fff;box-shadow:0 1px 6px rgba(0,0,0,.06);position:sticky;top:0;z-index:20}
+    .container{max-width:1100px;margin:0 auto;padding:20px}
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{font-weight:700;font-size:20px;color:var(--accent)}
+    nav a{margin-left:14px;color:var(--muted);text-decoration:none}
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:24px;align-items:center;padding:48px 0}
+    .hero h1{font-size:34px;margin:0 0 12px}
+    .hero p{color:var(--muted);margin:0 0 18px}
+    .btn{display:inline-block;padding:10px 16px;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;cursor:pointer}
+    .products{padding:24px 0}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+    .card{background:var(--card);border-radius:12px;padding:14px;box-shadow:0 6px 18px rgba(14,14,14,0.06);display:flex;flex-direction:column}
+    .card img{width:100%;height:220px;object-fit:cover;border-radius:8px}
+    .card h3{margin:12px 0 6px;font-size:16px}
+    .small{font-size:13px;color:var(--muted)}
+    footer{padding:30px 0;color:var(--muted)}
+    .cart-btn{position:relative}
+    .cart-count{position:absolute;right:-10px;top:-8px;background:#ff4d4d;color:white;border-radius:50%;min-width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:12px}
+    .cart-panel{position:fixed;right:18px;top:80px;width:320px;max-height:70vh;background:white;border-radius:12px;padding:12px;box-shadow:0 12px 40px rgba(0,0,0,0.12);overflow:auto;display:none;z-index:50}
+    .cart-panel.open{display:block}
+    .cart-item{display:flex;gap:10px;margin-bottom:10px}
+    .cart-item img{width:60px;height:60px;object-fit:cover;border-radius:6px}
+    .qty{display:flex;gap:6px;align-items:center}
+    @media (max-width:900px){.hero{grid-template-columns:1fr;}.hero img{display:none}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">Velisse</div>
+      <div>
+        <a href="#home">Home</a>
+        <a href="#products">Products</a>
+        <a href="#delivery">Delivery</a>
+        <a href="#contact">Contact</a>
+        <button class="btn cart-btn" id="openCart">Cart <span class="cart-count" id="cartCount">0</span></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero" id="home">
+      <div>
+        <h1>Velisse — Timeless fashion & beauty</h1>
+        <p>A curated dropshipping store with classic pieces and beauty staples. Real supplier links are attached to each product.</p>
+        <a class="btn" href="#products">Shop Now</a>
+      </div>
+      <div>
+        <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=900&q=60" alt="hero image" style="width:100%;border-radius:12px;object-fit:cover;height:300px"/>
+      </div>
+    </section>
+
+    <section id="products" class="products">
+      <h2>Featured products</h2>
+      <div class="grid" id="productGrid"></div>
+    </section>
+
+    <section id="delivery" style="margin-top:28px;background:#fff;padding:16px;border-radius:10px">
+      <h3>Delivery & Supplier details</h3>
+      <p class="small">Each product shows an external supplier link (AliExpress / Temu). Shipping times depend on supplier location and the method you choose. Typical estimates:</p>
+      <ul class="small">
+        <li>Standard shipping: 18–35 days</li>
+        <li>Priority shipping: 10–20 days</li>
+        <li>Local courier (if available): 5–10 days</li>
+      </ul>
+    </section>
+
+    <section id="contact" style="margin-top:18px">
+      <h3>Contact</h3>
+      <p class="small">Email: hello@velisse.example (replace with your real email)</p>
+    </section>
+  </main>
+
+  <div class="cart-panel" id="cartPanel">
+    <h3>Your cart</h3>
+    <div id="cartItems"></div>
+    <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+      <div class="small">Total: ₦<span id="cartTotal">0</span></div>
+      <div>
+        <button class="btn" id="checkout">Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div style="display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap">
+        <div>
+          <strong>Velisse</strong>
+          <div class="small">Timeless fashion & beauty — curated dropshipping</div>
+        </div>
+        <div class="small">© Velisse — Built with ❤️</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ====== PRODUCTS ======
+    const products = [
+      {
+        id: 'p1',
+        title: 'Classic Satin Dress',
+        price: 18000,
+        img: 'https://images.unsplash.com/photo-1520975910700-7c3d7f1f0d2e?auto=format&fit=crop&w=800&q=60',
+        supplier: { name: 'AliExpress', url: 'https://www.aliexpress.com/item/100500000000000.html', ship: '18–35 days' }
+      },
+      {
+        id: 'p2',
+        title: 'Everyday Lipstick (Matte)',
+        price: 4200,
+        img: 'https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=800&q=60',
+        supplier: { name: 'Temu', url: 'https://temu.com/item/100000000000000.html', ship: '10–25 days' }
+      },
+      {
+        id: 'p3',
+        title: 'Minimalist Handbag',
+        price: 23000,
+        img: 'https://images.unsplash.com/photo-1514996937319-344454492b37?auto=format&fit=crop&w=800&q=60',
+        supplier: { name: 'AliExpress', url: 'https://www.aliexpress.com/item/100500000000001.html', ship: '20–40 days' }
+      }
+    ];
+
+    // Render products
+    const productGrid = document.getElementById('productGrid');
+    function renderProducts() {
+      productGrid.innerHTML = '';
+      for (const p of products) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <img src="${p.img}" alt="${p.title}">
+          <h3>${p.title}</h3>
+          <div class="small">Supplier: <a href="${p.supplier.url}" target="_blank">${p.supplier.name}</a> — ${p.supplier.ship}</div>
+          <div style="margin-top:auto;display:flex;justify-content:space-between;align-items:center">
+            <div class="price">₦${p.price.toLocaleString()}</div>
+            <div>
+              <button class="btn" onclick="addToCart('${p.id}')">Add to cart</button>
+              <a class="small" style="margin-left:8px" href="${p.supplier.url}" target="_blank">Buy from supplier</a>
+            </div>
+          </div>
+        `;
+        productGrid.appendChild(card);
+      }
+    }
+    renderProducts();
+
+    // Cart logic
+    const cartKey = 'velisse_cart_v1';
+    function getCart(){ try { return JSON.parse(localStorage.getItem(cartKey))||{} } catch(e){ return {} }}
+    function saveCart(c){ localStorage.setItem(cartKey, JSON.stringify(c)); updateCartUI(); }
+    function addToCart(id){ const c=getCart(); c[id]=(c[id]||0)+1; saveCart(c); }
+    function changeQty(id,delta){ const c=getCart(); c[id]+=delta; if(c[id]<=0) delete c[id]; saveCart(c); }
+    function removeItem(id){ const c=getCart(); delete c[id]; saveCart(c); }
+
+    function updateCartUI(){
+      const c=getCart(), keys=Object.keys(c);
+      document.getElementById('cartCount').textContent = keys.reduce((s,k)=>s+c[k],0);
+      const itemsEl=document.getElementById('cartItems'); itemsEl.innerHTML='';
+      let total=0;
+      for(const id of keys){
+        const qty=c[id]; const p=products.find(x=>x.id===id); if(!p) continue;
+        total += p.price*qty;
+        const div=document.createElement('div'); div.className='cart-item';
+        div.innerHTML=`
+          <img src="${p.img}" alt="${p.title}">
+          <div style="flex:1">
+            <div style="font-weight:600">${p.title}</div>
+            <div class="small">₦${p.price.toLocaleString()} • ${p.supplier.name}</div>
+            <div class="qty">
+              <button onclick="changeQty('${id}',-1)">-</button>
+              <div style="min-width:28px;text-align:center">${qty}</div>
+              <button onclick="changeQty('${id}',1)">+</button>
+              <button style="margin-left:8px" onclick="removeItem('${id}')">Remove</button>
+            </div>
+          </div>`;
+        itemsEl.appendChild(div);
+      }
+      document.getElementById('cartTotal').textContent = total.toLocaleString();
+    }
+    updateCartUI();
+
+    document.getElementById('openCart').onclick = () => {
+      document.getElementById('cartPanel').classList.toggle('open');
+      updateCartUI();
+    };
+    document.getElementById('checkout').onclick = () => {
+      alert("For now, checkout goes directly to supplier links. You can integrate payment later.");
+    };
+  </script>
+</body>
+</html>
